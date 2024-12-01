@@ -1,0 +1,10 @@
+model:
+    name: mockup
+kafka:
+    bootstrap-servers: ['192.168.49.2:30421']
+    request:
+        topic: dependency-graph
+        value-type: json
+    report:
+        topic: detection-result
+        value-type: json
