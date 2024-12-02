@@ -1,0 +1,9 @@
+name: file-example
+request:
+    type: file
+    path: detection-request.in
+    value-type: json
+report:
+    type: file
+    path: detection-report.out
+    value-type: json

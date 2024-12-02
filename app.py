@@ -8,6 +8,7 @@ import threading
 import yaml
 
 import model_runner
+from conf.config import read_config
 from mock import api_server_mock
 
 
@@ -26,20 +27,7 @@ def get_status():
     return jsonify(model_runner.get_status())
 
 
-# 설정 파일 읽기
-def read_config(config_path):
-    with open(config_path) as config_stream:
-        logger.info('model config')
-        logger.info(config_stream.read())
-        try:
-            config_stream.seek(0)
-            config = yaml.safe_load(config_stream)
-            return config
-        except yaml.YAMLError as e:
-            print(e)
-            exit(0)
-
-
+# 모델 실행 스레드
 def start_model_runner_thread(config):
     logger.info('starting model runner thread')
     consumer_thread = threading.Thread( \
@@ -48,6 +36,7 @@ def start_model_runner_thread(config):
     consumer_thread.start()
 
 
+# 테스트용 api 서버 실행 스레드
 def start_mock_api_server_thread(config):
     logger.info('starting mock api server thread')
     mock_server_thread = threading.Thread( \
@@ -61,7 +50,7 @@ if __name__ == '__main__':
 
     # 모델 실행 스레드 시작
     start_model_runner_thread(config)
-    start_mock_api_server_thread(config)
+    #start_mock_api_server_thread(config)
 
     # Flask 서버 실행
     app.run(host='0.0.0.0', port=5000)

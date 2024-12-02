@@ -1,0 +1,11 @@
+name: kafka-example
+request:
+    type: kafka
+    bootstrap-servers: ['my-kafka-server:10000']
+    topic: request-topic
+    value-type: json
+report:
+    type: kafka
+    bootstrap-servers: ['my-kafka-server:10000', 'my-kafka-server-02:10000']
+    topic: report-topic
+    value-type: json

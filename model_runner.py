@@ -11,27 +11,22 @@ task_status = 'WAITING'
 
 # kafka에서 메시지를 읽어서 처리하고 결과를 반환하는 작업 반복
 def run_and_report(config):
-    bootstrap_servers = config['kafka']['bootstrap-servers']
-    request_topic = config['kafka']['request']['topic']
-    request_value_type = config['kafka']['request']['value-type']
-    report_topic = config['kafka']['report']['topic']
-    report_value_type = config['kafka']['report']['value-type']
-    key = config['model']['name']
-
-    producer_config = kafka_pub.KafkaProducerConfig(
-        bootstrap_servers=bootstrap_servers,
-        value_type=report_value_type
-    )
-    producer = kafka_pub.get_producer(producer_config)
+    key = config.name
 
     consumer_config = kafka_sub.KafkaConsumerConfig(
-        bootstrap_servers=bootstrap_servers,
-        topic=request_topic,
+        bootstrap_servers=config.request_bootstrap_servers,
+        topic=config.request_topic,
         auto_offset_reset='latest',
         group_id='detection-server-1',
-        value_type=request_value_type
+        value_type=config.request_value_type
     )
     consumer = kafka_sub.get_consumer(consumer_config)
+
+    producer_config = kafka_pub.KafkaProducerConfig(
+        bootstrap_servers=config.report_bootstrap_servers,
+        value_type=config.report_value_type
+    )
+    producer = kafka_pub.get_producer(producer_config)
 
     for message in consumer:
         global task_status
@@ -39,7 +34,7 @@ def run_and_report(config):
         # 탐지 모델을 수행한 다음 결과를 kafka로 전송
         report = run_model(message.value, producer)
         # TODO report status에 따른 처리
-        kafka_pub.produce(producer, report_topic, key, report)
+        kafka_pub.produce(producer, config.report_topic, key, report)
         task_status = 'WAITING'
         consumer.commit()
 
