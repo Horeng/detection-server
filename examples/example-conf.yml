@@ -5,8 +5,6 @@ request:
     topic: dependency-graph
     value-type: json
 report:
-    type: file
-    path: detection-report.out
     type: kafka
     bootstrap-servers: ['192.168.49.2:30421']
     topic: detection-result

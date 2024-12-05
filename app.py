@@ -46,7 +46,8 @@ def start_mock_api_server_thread(config):
 
 
 if __name__ == '__main__':
-    config = read_config('conf/example-conf.yml')
+    #config = read_config('examples/example-conf.yml')
+    config = read_config('examples/file-example-conf.yml')
 
     # 모델 실행 스레드 시작
     start_model_runner_thread(config)
