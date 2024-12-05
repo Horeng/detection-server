@@ -21,7 +21,7 @@ INFO 2024-12-05 22:05:55,843 - will write report to file detection-report.out
 ...
 ```
 
-## Configuration file
+## How to setup configuration file
 
 - overview ([examples/example-conf.yml](examples/example-conf.yml))
 
@@ -62,7 +62,7 @@ report:
 
 ## How to embed a model library to driver
 
-modify [model_runner.py](model_runner.py):
+modify `run_model` function in [model_runner.py](model_runner.py):
 
 ```python
 def run_model(message):
@@ -73,3 +73,10 @@ def run_model(message):
     return report 
 ```
 
+## How to run a mockup API server
+
+uncomment following line in [app.py](app.py):
+
+```python
+    #start_mock_api_server_thread(config)
+```
