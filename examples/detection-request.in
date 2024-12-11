@@ -1,2 +1,1 @@
-{ "packageList": "package-list-1", "packageMetadata": "package-metadata-1" }
-{ "packageList": "package-list-2", "packageMetadata": "package-metadata-2" }
+{ "token": "token-1", "payload": "payload-1" }

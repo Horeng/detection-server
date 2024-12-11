@@ -1,8 +1,9 @@
 from functools import partial
+import json
 import logging
-import time
 
 from kafka_utils import kafka_pub, kafka_sub
+from mock import model_mock
 
 
 logger = logging.getLogger(__name__)
@@ -15,8 +16,6 @@ def get_report_func(config):
         output_file = open(config.report_file_path, 'w')
         return lambda report: \
             output_file.writelines([ report + '\n' ])
-            #print('report: ' + report) \
-
     else:    # config.report_type.lower() == 'kafka':
         logger.info(f'will write report to kafka topic {config.report_topic}')
         producer_config = kafka_pub.KafkaProducerConfig(
@@ -36,8 +35,9 @@ def run_with_file_input(config):
         for message in input_file:
             global task_status
             task_status = 'RUNNING'
-            report = run_model(message)
+            report = run_model(json.loads(message))
             # TODO report status에 따른 처리
+            logger.info(f'report: {report}')
             report_func(report)
             task_status = 'WAITING'
 
@@ -55,14 +55,18 @@ def run_with_kafka_input(config):
     report_func = get_report_func(config)
 
     for message in consumer:
-        global task_status
-        task_status = 'RUNNING'
-        # 탐지 모델을 수행한 다음 결과를 kafka로 전송
-        report = run_model(message.value)
-        # TODO report status에 따른 처리
-        report_func(report)
-        task_status = 'WAITING'
-        consumer.commit()
+        try:
+            global task_status
+            task_status = 'RUNNING'
+            consumer.commit()
+            # 탐지 모델을 수행한 다음 결과를 kafka로 전송
+            report = run_model(message.value)
+            logger.info(f'report: {report}')
+            # TODO report status에 따른 처리
+            report_func(report)
+            task_status = 'WAITING'
+        except Exception as e:
+            logger.warn(f'exception occurred while model runs: {e}')
 
 
 # kafka에서 메시지를 읽어서 처리하고 결과를 반환하는 작업 반복
@@ -76,14 +80,15 @@ def run_and_report(config):
 
 
 # 모델 실행 후 결과 반환
-def run_model(message):
-    #time.sleep(5)
-    logger.info(f"Processing message: {message}")
+# request_message는 json string이 아니라 dict object여야 함
+def run_model(request_message):
+    logger.info(f"Processing message: {request_message}")
     # TODO report에 모델 실행 결과 저장
-    report = '{ "detection result": "success" }'
+    report = model_mock.run_model(request_message)
     return report 
 
 
 def get_status():
+    global task_status
     return task_status
 

@@ -1,9 +1,9 @@
 # OSS validation model driver
 
-## How to run
+## 실행 방법
 
 ```bash
-./app.py
+$ ./app.py -c {config file}
 INFO 2024-12-05 22:05:55,842 - model config
 INFO 2024-12-05 22:05:55,842 - name: file-example
 request:
@@ -21,9 +21,13 @@ INFO 2024-12-05 22:05:55,843 - will write report to file detection-report.out
 ...
 ```
 
-## How to setup configuration file
+## 설정 파일
 
-- overview ([examples/example-conf.yml](examples/example-conf.yml))
+- yaml 형식으로 작성한다.
+  - name: 모델 이름
+  - request: 요청 입력 방식
+  - report: 결과 출력 방식
+- 예시: ([examples/example-conf.yml](examples/example-conf.yml))
 
 ```yaml
 # detection system name
@@ -42,7 +46,8 @@ report:
     value-type: json
 ```
 
-- request from a file ([examples/file-example.conf.yml](examples/file-example-conf.yml))
+- 요청을 파일에서 읽으려면 request 항목을 수정한다.
+  - 예시: ([examples/file-example.conf.yml](examples/file-example-conf.yml))
 
 ```yaml
 request:
@@ -51,7 +56,8 @@ request:
     value-type: json
 ```
 
-- result to a file ([examples/file-example-conf.yml](examples/file-example-conf.yml))
+- 결과를 파일로 쓰려면 report 항목을 수정한다.
+  - 예시: ([examples/file-example-conf.yml](examples/file-example-conf.yml))
 
 ```yaml
 report:
@@ -60,9 +66,10 @@ report:
     value-type: json
 ```
 
-## How to embed a model library to driver
+## 모델 코드 연동
 
-modify `run_model` function in [model_runner.py](model_runner.py):
+- [model_runner.py](model_runner.py) 파일의 run_model 함수에서 모델 실행 함수를 호출한다.
+  - [mockup](mock/model_mock.py) 호출 예제를 참고
 
 ```python
 def run_model(message):
@@ -73,10 +80,7 @@ def run_model(message):
     return report 
 ```
 
-## How to run a mockup API server
+## 요청 입력을 kafka로 받을 경우 테스트용 mockup API 서버 실행 방법
 
-uncomment following line in [app.py](app.py):
+- 실행 인자에 -m(--mock) 옵션을 지정한다.
 
-```python
-    #start_mock_api_server_thread(config)
-```
