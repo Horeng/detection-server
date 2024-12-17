@@ -19,15 +19,14 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(
     prog='detection model driver'
 )
-parser.add_argument('-c', '--conf')
+parser.add_argument('-c', '--conf', required=True)
 parser.add_argument('-m', '--mock', action='store_true')
 
 
 # 모델 실행 스레드
 def start_model_runner_thread(config):
     logger.info('starting model runner thread')
-    consumer_thread = threading.Thread( \
-        target=partial(model_runner.run_and_report, config))
+    consumer_thread = threading.Thread(target=partial(model_runner.run, config))
     consumer_thread.daemon = True
     consumer_thread.start()
 
@@ -53,3 +52,4 @@ def server_main():
     # API 서버 mockup 시작
     if args.mock:
         start_mock_api_server_thread(config)
+

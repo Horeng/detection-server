@@ -24,5 +24,5 @@ def produce(producer, topic, key, value):
     producer.send(
         topic,
         key=key.encode('utf-8') if key else None,
-        value=value
+        value=value.replace('\n', ' ')
     )

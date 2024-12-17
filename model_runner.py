@@ -28,21 +28,27 @@ def get_report_func(config):
             kafka_pub.produce(producer, config.report_topic, key, report)
 
 
-def run_with_file_input(config):
+# 파일 내용으로 모델을 실행하고 결과를 반환
+def run_loop_file_input(config):
     report_func = get_report_func(config)
 
     with open(config.request_file_path, 'r') as input_file:
         for message in input_file:
             global task_status
             task_status = 'RUNNING'
-            report = run_model(json.loads(message))
-            # TODO report status에 따른 처리
-            logger.info(f'report: {report}')
-            report_func(report)
+            try:
+                # 모델 실행 함수
+                report = run_model(json.loads(message))
+                # TODO report status에 따른 처리
+                logger.info(f'report: {report}')
+                report_func(report)
+            except Exception as e:
+                logger.warn(f'exception occurred while model runs: {e}')
             task_status = 'WAITING'
 
 
-def run_with_kafka_input(config):
+# kafka 메시지로 모델을 실행하고 결과를 반환
+def run_loop_kafka_input(config):
     consumer_config = kafka_sub.KafkaConsumerConfig(
         bootstrap_servers=config.request_bootstrap_servers,
         topic=config.request_topic,
@@ -55,28 +61,27 @@ def run_with_kafka_input(config):
     report_func = get_report_func(config)
 
     for message in consumer:
+        global task_status
+        task_status = 'RUNNING'
         try:
-            global task_status
-            task_status = 'RUNNING'
             consumer.commit()
-            # 탐지 모델을 수행한 다음 결과를 kafka로 전송
+            # 모델 실행 함수
             report = run_model(message.value)
             logger.info(f'report: {report}')
             # TODO report status에 따른 처리
             report_func(report)
-            task_status = 'WAITING'
         except Exception as e:
             logger.warn(f'exception occurred while model runs: {e}')
+        task_status = 'WAITING'
 
 
-# kafka에서 메시지를 읽어서 처리하고 결과를 반환하는 작업 반복
-def run_and_report(config):
+def run(config):
     if config.request_type.lower() == 'file':
         logger.info(f'running with input from file {config.request_file_path}')
-        run_with_file_input(config)
+        run_loop_file_input(config)
     else:    # config.request_type.lower() == 'kafka'
         logger.info(f'running with input from kafka topic {config.request_topic}')
-        run_with_kafka_input(config)
+        run_loop_kafka_input(config)
 
 
 # 모델 실행 후 결과 반환
