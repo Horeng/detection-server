@@ -1,5 +1,8 @@
-from kafka import KafkaProducer
+# Imports - Standard
 import json
+
+# Imports - Third-party
+from kafka import KafkaProducer
 
 
 value_serializers = {
