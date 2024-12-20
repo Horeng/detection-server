@@ -58,8 +58,8 @@ x-airflow-common:
     _AIRFLOW_WWW_USER_EMAIL: ${_AIRFLOW_WWW_USER_EMAIL:-user@example.com}
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     # TODO: change auth info.
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${_AIRFLOW_WWW_USER_USERNAME}:${_AIRFLOW_WWW_USER_PASSWORD}@postgres/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://${_AIRFLOW_WWW_USER_USERNAME}:${_AIRFLOW_WWW_USER_PASSWORD}@postgres/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${_AIRFLOW_WWW_USER_USERNAME:-airflow}:${_AIRFLOW_WWW_USER_PASSWORD:-airflow}@postgres/airflow
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://${_AIRFLOW_WWW_USER_USERNAME:-airflow}:${_AIRFLOW_WWW_USER_PASSWORD:-airflow}@postgres/airflow
     # TODO: Give the correct port.
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     # TODO: Give the correct fernet key.
@@ -133,9 +133,8 @@ services:
   postgres:
     image: postgres:13
     environment:
-      # TODO: change the auth info.
-      POSTGRES_USER: ${_AIRFLOW_WWW_USER_USERNAME}
-      POSTGRES_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD}
+      POSTGRES_USER: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
+      POSTGRES_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
       POSTGRES_DB: airflow
     volumes:
       # TODO: Setup the volume.

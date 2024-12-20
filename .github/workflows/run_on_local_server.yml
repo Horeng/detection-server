@@ -17,13 +17,11 @@ jobs:
 
       - name: Print app dir
         run: ls -all
-      
-      - name: Export AIRFLOW_UID using `id -u`
-        run: |
-          export AIRFLOW_UID=$(id -u)
 
-      - name: Docker compose up
-        run: docker compose --profile flower up -d
+      - name: Docker compose up after Export AIRFLOW_UID using `id -u`
+        run: |
+          export AIRFLOW_UID=$(id -u) && \
+          docker compose --profile flower up -d
         env:
           # flask env. variables
           # TODO: Secret 관리 필요!!!
