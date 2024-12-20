@@ -32,7 +32,7 @@ wheels = [
 ]
 
 [[package]]
-name = "detection-server"
+name = "detection-server-selab"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

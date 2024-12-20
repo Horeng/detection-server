@@ -1,7 +1,7 @@
 [project]
-name = "detection-server"
+name = "detection-server-selab"
 version = "0.1.0"
-description = "Detection server for the HyukShinDoYak R&D project"
+description = "Detection server of SELab for the HyukShinDoYak R&D project"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
