@@ -1,0 +1,55 @@
+name: Run on local server
+
+on:
+  push:
+    branches:
+      - DockerizationWithAirflow
+
+env:
+  
+
+jobs:
+  build:
+    runs-on: [self-hosted]
+    environment:
+      - name: PROJECT_NAME
+        value: HyukShinDoYakR&D
+      - name: TIMEZONE
+        value: Asia/Seoul
+      - name: ENCODING
+        value: UTF-8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Print CWD
+        run: pwd
+
+      - name: Print app dir
+        run: ls -all
+      
+      - name: Export AIRFLOW_UID using `id -u`
+        run: |
+          export AIRFLOW_UID=$(id -u)
+
+      - name: Docker compose up
+        run: docker compose --profile flower up -d
+        env:
+          # airflow env. variables
+          AIRFLOW_IMAGE_NAME: ${{ vars.AIRFLOW_IMAGE_NAME }}
+          AIRFLOW_PROJ_DIR: ${{ vars.AIRFLOW_PROJ_DIR }}
+          # airflow auth info
+          # TODO: Secret 관리 필요!!!
+          _AIRFLOW_WWW_USER_USERNAME: airflow
+          _AIRFLOW_WWW_USER_PASSWORD: airflow
+          _AIRFLOW_WWW_USER_EMAIL: horeng@kakao.com
+
+          # MongoDB env. variables and auth info
+          # TODO: Secret 관리 필요!!!
+          MONGO_INITDB_DATABASE: dso_selab
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: root
+
+          # Kafka env. variables
+          # TODO: Secret 관리 필요!!!
+          KAFKA_TOPIC_NAME: detection-server-selab
