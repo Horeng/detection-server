@@ -95,7 +95,7 @@ x-airflow-common:
       condition: service_healthy
 
 services:
-  detection-server:
+  selab:
     build:
       context: .
       dockerfile: Dockerfile
