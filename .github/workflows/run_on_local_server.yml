@@ -25,6 +25,11 @@ jobs:
       - name: Docker compose up
         run: docker compose --profile flower up -d
         env:
+          # flask env. variables
+          # TODO: Secret 관리 필요!!!
+          FLASK_HOST: 0.0.0.0
+          FLASK_PORT: 5003
+
           # airflow env. variables
           AIRFLOW_IMAGE_NAME: ${{ vars.AIRFLOW_IMAGE_NAME }}
           AIRFLOW_PROJ_DIR: ${{ vars.AIRFLOW_PROJ_DIR }}

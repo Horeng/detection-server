@@ -95,6 +95,23 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  detection-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - name: PROJECT_NAME
+        value: HyukShinDoYakR&D
+      - name: TIMEZONE
+        value: Asia/Seoul
+      - name: ENCODING
+        value: UTF-8
+    restart: unless-stopped
+    depends_on:
+      - mongo
+
   mongo:
     image: mongo:8.0.4
     ports:
