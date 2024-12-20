@@ -1,5 +1,8 @@
-from kafka import KafkaConsumer
+# Imports - Standard
 import json
+
+# Imports - Third-party
+from kafka import KafkaConsumer
 
 
 value_deserializers = {

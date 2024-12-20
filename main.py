@@ -1,12 +1,16 @@
+# Imports - Standard
 from functools import partial
 import argparse
 import logging
 import sys
 import threading
 
+# Imports - Third-party
+
+# Imports - Local
 import model_runner
 from conf.config import read_config
-from mock import api_server_mock
+from mocks import api_server_mock
 
 
 logging.basicConfig(

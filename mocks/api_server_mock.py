@@ -1,5 +1,7 @@
+# Imports - Standard
 import time
 
+# Imports - Third-party
 from kafka_utils import kafka_pub
 
 

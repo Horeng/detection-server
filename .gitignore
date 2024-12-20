@@ -1,2 +1,11 @@
+# Python cache
 __pycache__
+
+# Swap files
 *.swp
+
+# Environment variables
+.env
+
+# macOS
+.DS_Store

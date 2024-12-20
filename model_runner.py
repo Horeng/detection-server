@@ -1,9 +1,13 @@
+# Imports - Standard
 from functools import partial
 import json
 import logging
 
+# Imports - Third-party
 from kafka_utils import kafka_pub, kafka_sub
-from mock import model_mock
+
+# Imports - Local
+from mocks import model_mock
 
 
 logger = logging.getLogger(__name__)
