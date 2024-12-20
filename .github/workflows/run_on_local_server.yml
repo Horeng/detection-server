@@ -5,19 +5,9 @@ on:
     branches:
       - DockerizationWithAirflow
 
-env:
-  
-
 jobs:
   build:
     runs-on: [self-hosted]
-    environment:
-      - name: PROJECT_NAME
-        value: HyukShinDoYakR&D
-      - name: TIMEZONE
-        value: Asia/Seoul
-      - name: ENCODING
-        value: UTF-8
     steps:
       - name: Checkout
         uses: actions/checkout@v4
