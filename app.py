@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 # Imports - Standard
+import os
 from flask import Flask, jsonify
 
 # Imports - Local
@@ -21,5 +22,6 @@ if __name__ == '__main__':
     server_main()
 
     # Flask 서버 실행
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host=os.getenv('FLASK_HOST', '0.0.0.0'),
+            port=os.getenv('FLASK_PORT', 5000))
 
