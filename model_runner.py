@@ -34,6 +34,7 @@ def get_report_func(config):
 
 # 파일 내용으로 모델을 실행하고 결과를 반환
 def run_loop_file_input(config):
+    mode_name = config.name
     report_func = get_report_func(config)
 
     with open(config.request_file_path, 'r') as input_file:
@@ -41,10 +42,7 @@ def run_loop_file_input(config):
             global task_status
             task_status = 'RUNNING'
             try:
-                # 모델 실행 함수
-                report = run_model(json.loads(message))
-                # TODO report status에 따른 처리
-                logger.info(f'report: {report}')
+                report = run_model(model_name, json.loads(message))
                 report_func(report)
             except Exception as e:
                 logger.warn(f'exception occurred while model runs: {e}')
@@ -62,6 +60,7 @@ def run_loop_kafka_input(config):
     )
     consumer = kafka_sub.get_consumer(consumer_config)
 
+    model_name = config.name
     report_func = get_report_func(config)
 
     for message in consumer:
@@ -69,10 +68,7 @@ def run_loop_kafka_input(config):
         task_status = 'RUNNING'
         try:
             consumer.commit()
-            # 모델 실행 함수
-            report = run_model(message.value)
-            logger.info(f'report: {report}')
-            # TODO report status에 따른 처리
+            report = run_model(model_name, message.value)
             report_func(report)
         except Exception as e:
             logger.warn(f'exception occurred while model runs: {e}')
@@ -90,11 +86,37 @@ def run(config):
 
 # 모델 실행 후 결과 반환
 # request_message는 json string이 아니라 dict object여야 함
-def run_model(request_message):
+def run_model(model_name, request_message):
     logger.info(f"Processing message: {request_message}")
-    # TODO report에 모델 실행 결과 저장
-    report = model_mock.run_model(request_message)
-    return report 
+    token, request_data = parse_request_message(request_message)
+    
+    # report에 모델 실행 결과 저장
+    # TODO 실행 상태에 따른 처리
+    model_result = model_mock.run_model(request_message)
+    report = make_report(token, model_name, model_result)
+    logger.info(f'Report: {report}')
+    return report
+
+
+def parse_request_message(request_message):
+    if isinstance(request_message, dict):
+        pass
+    elif isinstance(request_message, str):
+        try:
+            request_message = json.loads(request_message)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid request message type: {type(request_message)}")
+    else:
+        raise ValueError(f"Invalid request message type: {type(request_message)}")
+
+    token = request_message['token']
+    request_data = request_message['requestData']
+    return token, request_data
+
+
+def make_report(token, model_name, model_result):
+    report_template = '{ "token": "%s", "modelName": "%s", "report": "%s" }'
+    return report_template % (token, model_name, model_result)
 
 
 def get_status():
