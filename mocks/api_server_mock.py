@@ -9,8 +9,8 @@ def run_mock_api_server(config):
     key = config.name
     dummy_request = '''
     {
-        "packageList": "package-list",
-        "packageMetadata": "package-metadata"
+        "token": "test-token",
+        "payload": "detection request payload example: this payload comes from user plugin"
     }
     '''
 

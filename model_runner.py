@@ -91,8 +91,8 @@ def run_model(model_name, request_message):
     token, request_data = parse_request_message(request_message)
     
     # report에 모델 실행 결과 저장
-    # TODO 실행 상태에 따른 처리
     model_result = model_mock.run_model(request_message)
+    # TODO 에러 발생시 처리 필요함
     report = make_report(token, model_name, model_result)
     logger.info(f'Report: {report}')
     return report
@@ -110,7 +110,7 @@ def parse_request_message(request_message):
         raise ValueError(f"Invalid request message type: {type(request_message)}")
 
     token = request_message['token']
-    request_data = request_message['requestData']
+    request_data = request_message['payload']
     return token, request_data
 
 
