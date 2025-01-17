@@ -33,7 +33,13 @@ $ pip install -r requirements.txt
 ## 실행 방법
 
 ```bash
-$ ./app.py -c {config file}
+$ ./app.py -h
+usage: app.py [-h] -c CONF [-m]
+
+options:
+  -h, --help            show this help message and exit
+  -c CONF, --conf CONF  config file (required)
+  -m, --mock            run mock api server along
 ```
 
 ## 설정 파일
@@ -59,16 +65,15 @@ report:
     value-type: json
 ```
 
-- 요청을 파일에서 읽으려면 request 항목을 수정한다.
+- 입출력을 kafka 대신 파일로 읽고 쓰도록 설정할 수 있다.
 ```yaml
+# request만 바꿔도 된다.
 request:
     type: file
     path: examples/detection-request.in
     value-type: json
-```
 
-- 실행 결과를 파일로 쓰려면 report 항목을 수정한다.
-```yaml
+# report만 바꿔도 된다.
 report:
     type: file
     path: detection-report.out
@@ -82,14 +87,17 @@ report:
 def run_model(message):
     ...
     # 입력 인자(message)를 모델 실행 인자로 전달하고 report에 모델 실행 결과 저장
+    # 이 코드 라인에서 호출하는 실제 모델 함수로 바꿔야 한다.
     report = model_func(message)
-    return report
+    ...
 ```
 
-## 요청 입력을 kafka로 받을 경우 테스트용 mockup API 서버 실행 방법
-
-- 실행 인자에 -m(--mock) 옵션을 지정한다.
-```bash
-$ ./app.py -c {config file} -m
+- 모델 실행 함수는 탐지 결과를 문자열 형식으로 반환하면 된다. (형식은 필요없다)
+- 서버 함수가 아래와 같은 형식으로 kafka에 응답하거나 파일에 기록한다.
+```json
+{
+  "token": "(요청으로 받은 토큰)",
+  "modelName": "(설정 파일에 지정한 모델 이름)",
+  "report": "(탐지 모델이 생성한 결과)"
+}
 ```
-

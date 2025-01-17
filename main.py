@@ -21,10 +21,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(
-    prog='detection model driver'
+    prog='app.py'
 )
-parser.add_argument('-c', '--conf', required=True)
-parser.add_argument('-m', '--mock', action='store_true')
+parser.add_argument('-c', '--conf', required=True, help='config file (required)')
+parser.add_argument('-m', '--mock', action='store_true', help='run input(api server) mockup along')
 
 
 # 모델 실행 스레드
