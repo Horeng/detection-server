@@ -92,7 +92,7 @@ def run_model(model_name, request_message):
     
     # report에 모델 실행 결과 저장
     # 이 코드 라인에서 호출하는 실제 모델 함수로 바꿔야 한다.
-    model_result = model_mock.run_model(request_message)
+    model_result = model_mock.run_model(request_data)
     # TODO 에러 발생시 처리 필요함
     report = make_report(token, model_name, model_result)
     logger.info(f'Report: {report}')
