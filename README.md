@@ -88,7 +88,7 @@ def run_model(model_name, request_message):
     ...
     # 입력 인자(request_data)를 모델 실행 인자로 전달하고 report에 모델 실행 결과 저장
     # 이 코드 라인에서 호출하는 'model_func'가 실제 모델 함수로 바꿔야 한다.
-    report = model_func(request_data)
+    model_result = model_func(request_data)
     ...
 ```
 
