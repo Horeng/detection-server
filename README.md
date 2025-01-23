@@ -84,11 +84,11 @@ report:
 
 - [model_runner.py](model_runner.py) 파일의 run_model 함수에서 모델 실행 함수를 호출한다.
 ```python
-def run_model(message):
+def run_model(model_name, request_message):
     ...
-    # 입력 인자(message)를 모델 실행 인자로 전달하고 report에 모델 실행 결과 저장
-    # 이 코드 라인에서 호출하는 실제 모델 함수로 바꿔야 한다.
-    report = model_func(message)
+    # 입력 인자(request_message)를 모델 실행 인자로 전달하고 report에 모델 실행 결과 저장
+    # 이 코드 라인에서 호출하는 'model_func'가 실제 모델 함수로 바꿔야 한다.
+    report = model_func(request_message)
     ...
 ```
 
