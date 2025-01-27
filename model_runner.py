@@ -55,7 +55,7 @@ def run_loop_kafka_input(config):
         bootstrap_servers=config.request_bootstrap_servers,
         topic=config.request_topic,
         auto_offset_reset='latest',
-        group_id='detection-server-1',
+        group_id='model-' + config.name,
         value_type=config.request_value_type
     )
     consumer = kafka_sub.get_consumer(consumer_config)
