@@ -1,11 +1,14 @@
 [project]
-name = "detection-server-selab"
+name = "detection-server"
 version = "0.1.0"
-description = "Detection server of SELab for the HyukShinDoYak R&D project"
+description = "Detection server R&D project"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "flask>=3.1.0",
+    "ipykernel>=6.29.5",
     "kafka-python>=2.0.2",
+    "pydantic>=2.10.6",
     "pyyaml>=6.0.2",
+    "requests>=2.32.3",
 ]
