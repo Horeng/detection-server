@@ -101,3 +101,7 @@ def run_model(model_name, request_message):
   "report": "(탐지 모델이 생성한 결과)"
 }
 ```
+
+## API 서버 테스트
+
+- [TestAPIServerWithKafka.ipynb](examples/TestAPIServerWithKafka.ipynb) 파일을 참고한다.
